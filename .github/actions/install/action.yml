@@ -31,13 +31,10 @@ runs:
 
       - name: Install buf
         shell: bash
-        run: |
-          PREFIX="/usr/local" && \
-          VERSION="1.19.0" && \
-          curl -sSL \
-          "https://github.com/bufbuild/buf/releases/download/v${VERSION}/buf-$(uname -s)-$(uname -m).tar.gz" | \
-          tar -xvzf - -C "${PREFIX}" --strip-components 1
-          buf --version
+      # Install the `buf` CLI
+      - uses: bufbuild/buf-setup-action@v1.19.0
+      # Ensure that `buf` is installed
+      - run: buf --version
 
 # - name: Installing protoc-gen-go
 #   run: |
