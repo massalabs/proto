@@ -1,0 +1,31 @@
+name: 'Generate Golang proto files with buf generate'
+on:
+  push:
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Install buf
+        run: |
+          curl -sSL \
+            "https://github.com/bufbuild/buf/releases/latest/download/buf-$([[ "$OSTYPE" == "darwin"* ]] && echo "darwin" || echo "linux")-$(uname -m).tar.gz" \
+            | sudo tar -C /usr/local/bin -xvzf -
+          buf --version
+
+      - name: Generate Go Protobuf
+        run: cd node-public-api && buf generate
+
+      - name: Commit changes
+        run: |
+          git config --global user.name "GitHub Action"
+          git config --global user.email "action@github.com"
+          git add .
+          git diff --quiet --exit-code --cached || git commit -m "Generated Go protobuf files by GitHub Action"
+
+# - name: Installing protoc-gen-go
+#   run: |
+#     go get github.com/golang/protobuf/protoc-gen-go
+#     go get google.golang.org/grpc/cmd/protoc-gen-go-grpc 
