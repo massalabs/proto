@@ -50,7 +50,7 @@ jobs:
         with:
           token: 
           commit_message: "Generate powered-by"
-          file_pattern: "powered-by.md"
+          file_pattern: "*.go"
           # Commit code using massabot account that can bypass push and MR restriction
           commit_author: massabot <info@massa.net>
 
