@@ -45,10 +45,12 @@ jobs:
           os: ${{ matrix.os }}
       - name: Generate Go Protobuf
         run: cd node-public-api && buf generate
-      # - name: Commit changes
-      #   run: |
-      #     git config --global user.name "GitHub Action"
-      #     git config --global user.email "action@github.com"
-      #     git add .
-      #     git diff --quiet --exit-code --cached || git commit -m "Generated Go protobuf files by GitHub Action"
+      - name: Commit Changes
+        uses: stefanzweifel/git-auto-commit-action@v4
+        with:
+          token: 
+          commit_message: "Generate powered-by"
+          file_pattern: "powered-by.md"
+          # Commit code using massabot account that can bypass push and MR restriction
+          commit_author: massabot <info@massa.net>
 
