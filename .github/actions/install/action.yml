@@ -30,10 +30,11 @@ runs:
         uses: devbotsxyz/xcode-select@v1
 
       - name: Install buf
-        shell: bash
         # Install the `buf` CLI
         uses: bufbuild/buf-setup-action@v1.19.0
         # Ensure that `buf` is installed
+      - name: Check that buf is installed
+        shell: bash
         run: buf --version
 
 # - name: Installing protoc-gen-go
