@@ -30,6 +30,7 @@ runs:
         uses: devbotsxyz/xcode-select@v1
 
       - name: Install buf
+        shell: bash
         run: |
           curl -sSL \
             "https://github.com/bufbuild/buf/releases/latest/download/buf-$([[ "$OSTYPE" == "darwin"* ]] && echo "darwin" || echo "linux")-$(uname -m).tar.gz" \
