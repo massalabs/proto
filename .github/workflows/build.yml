@@ -1,0 +1,56 @@
+# This is a configuration file for a GitHub Actions workflow.
+# The workflow is triggered when a versioned tag is pushed to the main branch,
+# or when a pull request is opened or when the workflow is manually called.
+on:
+  push:
+    tags:
+      - v[0-9]+.* # this regular expression matches tags like v1.0.0, v2.3.4, etc.
+    branches:
+  pull_request:
+  workflow_call:
+    inputs:
+      tag_name:
+        type: string
+      draft:
+        type: string
+      prerelease:
+        type: string
+      generate_release_notes:
+        type: string
+
+# write permission is needed for github release job.
+permissions:
+  contents: write
+
+jobs:
+  build:
+    name: build and upload artifact
+    # The build job has a matrix strategy, which means it will run multiple times with different combinations of the os, arch, and target variables
+    strategy:
+      matrix:
+        include:
+          - os: ubuntu-latest
+            arch: amd64
+            target: linux
+            cc: gcc
+            cxx: g++
+
+    # The build job runs on the specified operating system.
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v3
+      - name: installing dependencies
+        uses: ./.github/actions/install
+        with:
+          os: ${{ matrix.os }}
+      - name: Generate Go Protobuf
+        run: cd node-public-api && buf generate
+      - name: Commit Changes
+        uses: stefanzweifel/git-auto-commit-action@v4
+        with:
+          token: 
+          commit_message: "Generate powered-by"
+          file_pattern: "*.go"
+          # Commit code using massabot account that can bypass push and MR restriction
+          commit_author: massabot <info@massa.net>
+

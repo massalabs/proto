@@ -1,0 +1,42 @@
+inputs:
+  os:
+    required: true
+    default: 'ubuntu-20.04'
+  target:
+    required: false
+    default: ''
+
+runs:
+  using: "composite"
+  steps:
+      - uses: actions/setup-go@v2
+        with:
+          go-version: 1.19.4
+
+      - name: Install Go dependencies
+        shell: bash
+        run: |
+          if [ "${{ inputs.os }}" == "ubuntu-latest" ]; then
+            sudo apt-get update
+            sudo apt-get install -y xorg-dev
+            export CC=musl-gcc
+          fi
+          if [ "${{ inputs.target }}" == "windows" ]; then
+            sudo apt-get install -y gcc-mingw-w64
+            export CC=x86_64-w64-mingw32-gcc
+          fi
+      - name: Install Xcode
+        if: ${{ inputs.os == 'macos-latest' }}
+        uses: devbotsxyz/xcode-select@v1
+
+      - name: Install buf
+        uses: bufbuild/buf-setup-action@v1.19.0
+
+      - name: Check that buf is installed
+        shell: bash
+        run: buf --version
+
+# - name: Installing protoc-gen-go
+#   run: |
+#     go get github.com/golang/protobuf/protoc-gen-go
+#     go get google.golang.org/grpc/cmd/protoc-gen-go-grpc 
