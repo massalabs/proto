@@ -10,7 +10,6 @@ require (
 	google.golang.org/protobuf v1.30.0
 )
 
-
 require (
 	github.com/golang/protobuf v1.5.3 // indirect
 	golang.org/x/net v0.10.0 // indirect
